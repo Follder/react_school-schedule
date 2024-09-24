@@ -13,11 +13,11 @@ require_once '../config/db.php';
 
 $query = "SELECT * FROM subjects";
 $stmt = $pdo->query($query);
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $query = "SELECT * FROM teachers";
 $stmt = $pdo->query($query);
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $data = [
   'subjects' => $subjects,

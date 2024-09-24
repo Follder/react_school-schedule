@@ -11,10 +11,10 @@ CREATE TABLE IF NOT EXISTS $name (
 ";
 
 try {
-    $pdo->exec($query);
-    echo "Таблиця $name була успішно створена!";
+  $pdo->exec($query);
+  echo "Table $name was successfully created!";
 } catch (PDOException $e) {
-    die("Помилка при створенні таблиці: " . $e->getMessage());
+  die("Error when creating the table: " . $e->getMessage());
 }
 
 $seeds = [
@@ -33,5 +33,5 @@ foreach ($seeds as $seed) {
   $stmt->execute([$seed]);
 }
 
-echo "$name створена та заповнена";
+echo "$name created and filled";
 ?>
