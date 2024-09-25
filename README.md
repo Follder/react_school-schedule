@@ -1,4 +1,4 @@
-# School Schedule"
+# School Schedule
 
 ## Demo
 For Demo this project you can use [DEMO LINK](https://test.podarun.com.ua/)

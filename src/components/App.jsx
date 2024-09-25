@@ -11,17 +11,13 @@ function App() {
   const [scheduleError, setScheduleError] = useState("");
   const [scheduleMessage, setScheduleMessage] = useState("");
 
-  // Localhost ULRs
-  const GET_URL = "http://localhost/soloway/api/get-data.php";
-  const POST_SUBJECT_URL = "http://localhost/soloway/api/post-subject-data.php";
-  const POST_SUBJECT_TEACHER_URL =
-    "http://localhost/soloway/api/post-subject-teacher-data.php";
 
-  // Host ULRs
-  // const GET_URL = "/api/get-data.php";
-  // const POST_SUBJECT_URL = "/api/post-subject-data.php";
-  // const POST_SUBJECT_TEACHER_URL =
-  //   "/api/post-subject-teacher-data.php";
+  const API_ROOT = `${window.location.hostname === "localhost" ? "http://localhost/soloway" : ""}/api`;
+
+  const GET_URL = `${API_ROOT}/get-data.php`;
+    const POST_SUBJECT_URL = `${API_ROOT}/post-subject-data.php`;
+    const POST_SUBJECT_TEACHER_URL =
+      `${API_ROOT}/post-subject-teacher-data.php`;
 
   const postSubjectData = () => {
     const formData = new FormData();
@@ -38,15 +34,16 @@ function App() {
     })
       .then((result) => result.json())
       .then((data) => {
+
         if (data.status === "error") {
-          setSubjectError(data.message);
+          throw new Error(data.message)
         }
 
         setDay("");
         setSubject("");
         getData();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => setSubjectError(error.message));
   };
 
   const postTeacherSubjectData = () => {
@@ -65,13 +62,15 @@ function App() {
     })
       .then((response) => response.json())
       .then((data) => {
+
         if (data.status === "error") {
-          setScheduleError(data.message);
-        } else {
-          setScheduleMessage(data.message);
+          throw new Error(data.message)
         }
+
+        getData();
+        setScheduleMessage(data.message);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => setScheduleError(error.message));
   };
 
   const getData = () => {
@@ -95,7 +94,9 @@ function App() {
     const initialSelectedTeachers = {};
 
     data.subjects.forEach((subject) => {
-      initialSelectedTeachers[subject.id] = null;
+      const teacherEntry = data.subjectTeacher?.find(teacher => teacher.subjectId === subject.id);
+
+      initialSelectedTeachers[subject.id] = teacherEntry ? teacherEntry.teacherId : null;
     });
 
     setSelectedTeachers(initialSelectedTeachers);
@@ -105,6 +106,7 @@ function App() {
     if (subjectError && (subject !== '' || day !== '')) {
       setSubjectError('');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subject, day])
 
   useEffect(() => {

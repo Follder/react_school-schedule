@@ -20,6 +20,7 @@ export const AddSubject = ({ handleSubjectSubmit, subject, setSubject, day, setD
           <select
             name="day"
             value={day}
+            required
             onChange={(e) => setDay(e.target.value)}
             className="px-5 py-3 rounded-md appearance-none w-full focus:outline-none focus:ring-2 focus:ring-slave-500 focus:border-slave-500 shadow cursor-pointer"
           >
