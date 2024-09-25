@@ -9,11 +9,19 @@ function App() {
   const [data, setData] = useState({ subjects: [], teachers: [] });
   const [subjectError, setSubjectError] = useState("");
   const [scheduleError, setScheduleError] = useState("");
+  const [scheduleMessage, setScheduleMessage] = useState("");
 
+  // Localhost ULRs
   const GET_URL = "http://localhost/soloway/api/get-data.php";
   const POST_SUBJECT_URL = "http://localhost/soloway/api/post-subject-data.php";
   const POST_SUBJECT_TEACHER_URL =
     "http://localhost/soloway/api/post-subject-teacher-data.php";
+
+  // Host ULRs
+  // const GET_URL = "/api/get-data.php";
+  // const POST_SUBJECT_URL = "/api/post-subject-data.php";
+  // const POST_SUBJECT_TEACHER_URL =
+  //   "/api/post-subject-teacher-data.php";
 
   const postSubjectData = () => {
     const formData = new FormData();
@@ -59,6 +67,8 @@ function App() {
       .then((data) => {
         if (data.status === "error") {
           setScheduleError(data.message);
+        } else {
+          setScheduleMessage(data.message);
         }
       })
       .catch((error) => console.log(error));
@@ -91,6 +101,24 @@ function App() {
     setSelectedTeachers(initialSelectedTeachers);
   }, [data]);
 
+  useEffect(() => {
+    if (subjectError && (subject !== '' || day !== '')) {
+      setSubjectError('');
+    }
+  }, [subject, day])
+
+  useEffect(() => {
+    if (scheduleError || scheduleMessage || subjectError) {
+      const timer = setTimeout(() => {
+        setScheduleError('');
+        setScheduleMessage('');
+        setSubjectError('');
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [scheduleError, scheduleMessage, subjectError])
+
   const handleTeachersChange = (subjectId, teacherId) => {
     setSelectedTeachers((prev) => ({
       ...prev,
@@ -108,8 +136,6 @@ function App() {
     postTeacherSubjectData();
   };
 
-  console.log(data);
-
   return (
     <div>
       <div className="bg-gradient-to-tr from-purple-300 from-10% via-rose-100 via-70% to-purple-200 to-90% h-[350px] absolute top-0 left-0 right-0"></div>
@@ -126,12 +152,13 @@ function App() {
               selectedTeachers={selectedTeachers}
               handleTeachersChange={handleTeachersChange}
               scheduleError={scheduleError}
+              scheduleMessage={scheduleMessage}
             />
           )}
         </div>
 
         <AddSubject
-          handleAddSubject={handleSubjectSubmit}
+          handleSubjectSubmit={handleSubjectSubmit}
           subject={subject}
           setSubject={setSubject}
           day={day}
