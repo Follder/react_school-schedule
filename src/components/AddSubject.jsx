@@ -1,11 +1,14 @@
+import { useContext } from "react";
 import { DAYS_OF_WEEK } from "../constants/daysOfWeek";
+import { Context } from "./Context";
 
-export const AddSubject = ({ handleSubjectSubmit, subject, setSubject, day, setDay }) => {
+export const AddSubject = ({ handleSubjectSubmit }) => {
+  const {subject, day, setSubject, setDay } = useContext(Context)
   return (
     <div className="bg-slate-300 p-6 rounded-md shadow-xl w-full mt-10">
-      <h2 className="text-xl font-bold text-slate-500">Add new subject:</h2>
+      <h2 className="text-l sm:text-xl font-bold text-slate-500">Add new subject:</h2>
       <form
-        className="grid grid-cols-3 gap-5 mt-3"
+        className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 mt-3"
         onSubmit={handleSubjectSubmit}
       >
         <input
@@ -52,7 +55,7 @@ export const AddSubject = ({ handleSubjectSubmit, subject, setSubject, day, setD
         </div>
         <button
           type="submit"
-          className="px-5 py-3 rounded-md bg-slate-500 text-white hover:bg-slate-400 transition-all"
+          className="px-5 py-3 rounded-md bg-slate-500 text-white hover:bg-slate-400 transition-all sm:col-span-2 md:col-span-1"
         >
           Submit subject
         </button>
